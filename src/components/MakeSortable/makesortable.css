@@ -14,3 +14,10 @@
     margin-top: 20px;
     cursor: grab;
 }
+
+hr {
+    visibility: hidden;
+}
+/* .highlight{
+    visibility: visible;
+} */

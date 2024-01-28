@@ -5,15 +5,14 @@ import MakeSortable from '../MakeSortable/MakeSortable'
 
 const MainPage = () => {
   const [dataComponents, setDataComponents] = useState(data)
+  const [draggingItem, setDraggingItem] = useState(null)
   return (
     <div className='mainpage'>
         Sort the items!
-        <MakeSortable dataComponents={dataComponents} setDataComponents={setDataComponents}/>
-        {/* {data.map(item => {
-            return(
-                <MakeSortable key={item.id} id={item.id} 
-                            text={item.text} color={item.color}/>)
-        })} */}
+        <MakeSortable dataComponents={dataComponents} 
+                      setDataComponents={setDataComponents}
+                      setDraggingItem={setDraggingItem}
+                      draggingItem={draggingItem}/>
     </div>
   )
 }

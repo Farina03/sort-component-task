@@ -1,5 +1,4 @@
-export const data = {
-    dataItems: [
+export const data = [
     {
         id: 1,
         color: "lightblue",
@@ -23,7 +22,4 @@ export const data = {
         color: "#F28585",
         position: 4,
         text: "fourth div"
-    }],
-
-    draggingItem: null
-}
+    }]

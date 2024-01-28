@@ -1,84 +1,88 @@
 import React, { useState } from 'react'
 import './makesortable.css'
 
-const MakeSortable = ({dataComponents, setDataComponents}) => { //id, text, color
-  // const [color, setColor] = useState("white")
-  // const singleDivStyle = {
-  //   backgroundColor: color
-  // }
+const MakeSortable = ({dataComponents, setDataComponents, setDraggingItem, draggingItem}) => { //id, text, color
   const [isDragging, setIsDragging] = useState(false)
-  // function handleDragBoxMouseUp() {
-  //   setIsDragging(false)
-  // }
+  const [highlighter, setHighlighter] = useState(0)
+  const [direction, setDirection] = useState(0)
+
+  const highlighterStyle = {
+    // visibility: highlighter ? "visible" : "hidden"
+  }
   function handleDragBoxMouseDown() {
     setIsDragging(true)
   }
-  function handleDragStart(e, item) {
-    setDataComponents(prevData => {
-      return ({
-        ...prevData,
-        draggingItem : item
-      })
-    })
+  function handleDragStart(e, item, index) {
+    setDraggingItem(item)
+    setHighlighter(index)
+    console.log(index, "dragstartindex")
   }
-  function handleDragEnd() {
-    setDataComponents(prevData => {
-      return {
-        ...prevData,
-        draggingItem: null
-      }
-    })
-    setIsDragging(false)
+  function handleDragEnter(index) {
   }
-  function handleDragOver(e) {
+  // function handleDragEnd() {
+  //   setDraggingItem(null)
+  //   setIsDragging(false)
+  //   setHighlighter(false)
+  // }
+  function handleDragOver(e, item, index) {
     e.preventDefault()
+    if(index === highlighter)
+      document.getElementById(index).style.setProperty("visibility", "hidden")
+    else document.getElementById(index+direction).style.setProperty("visibility", "visible")
   }
-  function handleDrop(e, targetItem) {
-    const {draggingItem, dataItems} = dataComponents
+  function handleDragLeave(index) {
+    document.getElementById(index).style.setProperty("visibility", "hidden")
+  }
+  function handleDrop(e, targetItem, index) {
     if(!draggingItem) return
-
-    const currentIndex = dataItems.indexOf(draggingItem)
-    const targetIndex = dataItems.indexOf(targetItem)
+    const currentIndex = dataComponents.indexOf(draggingItem)
+    const targetIndex = dataComponents.indexOf(targetItem)
     if(currentIndex !== -1 && targetIndex !== -1) {
-      dataItems.splice(currentIndex, 1)
-      dataItems.splice(targetIndex, 0, draggingItem)
-      setDataComponents(prevData => {
-        return {
-          ...prevData,
-          dataItems
-        }
-      })
+      dataComponents.splice(currentIndex, 1)
+      dataComponents.splice(targetIndex, 0, draggingItem)
+      setDataComponents(dataComponents)
     }
+    for(let i = 0; i <= dataComponents.length; i++) {
+      document.getElementById(i).style.setProperty("visibility", "hidden")
+    }
+    setDraggingItem(null)
     setIsDragging(false)
+    setHighlighter(false)
   }
-  // console.log(dataComponents)
+  function handleMouseMove(e) {
+    if(isDragging) {
+      console.log("triggered", e.movementX)
+      if(e.movementY > 0) 
+        setDirection(1)      //top to bottom is positive. need to add 1
+      else setDirection(0)
+    }
+  }
+  
   return (
-    // <div id={id} style={singleDivStyle} className='single-div-class'>
-    <div>
-      {
-        dataComponents.dataItems.map((item,index) => {
-          //setColor(item.color)
+    <div onMouseMove={(e) => handleMouseMove(e)}>
+      {dataComponents.map((item,index) => {
           return (
-            <div key={item.id} id={item.id} className='single-div-class' 
+            <div key={item.id} >
+              <hr id={index} style={highlighterStyle}></hr>
+              <div key={item.id} className='single-div-class' 
                   style={{backgroundColor:item.color}}
                   draggable={isDragging ? 'true' : 'false'}
-                  onDragStart={(e) => handleDragStart(e, item)}
-                  onDragEnd={handleDragEnd}
-                  onDragOver={handleDragOver}
-                  onDrop={(e) => handleDrop(e, item)}>
-                  {/* // onMouseUp={handleDragBoxMouseUp}> */}
+                  onDragStart={(e) => handleDragStart(e, item, index)}
+                  onDragEnter={() => handleDragEnter(index)}
+                  // onDragEnd={handleDragEnd}
+                  onDragOver={(e) => handleDragOver(e, item, index)}
+                  onDragLeave={() => handleDragLeave(index)}
+                  onDrop={(e) => handleDrop(e, item, index)}>
               <div className='drag-div' 
                   onMouseDown={handleDragBoxMouseDown}>
               </div>
               {item.text}
             </div>
+            </div>
           )
         })
       }
-        {/* <div className='drag-div'> */}
-
-        {/* </div> */}
-        {/* {text} */}
+      <hr id={dataComponents.length}></hr>
     </div>
   )
 }

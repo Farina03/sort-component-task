@@ -3,35 +3,53 @@ import './makesortable.css'
 
 const MakeSortable = ({dataComponents, setDataComponents, setDraggingItem, draggingItem}) => { //id, text, color
   const [isDragging, setIsDragging] = useState(false)
-  const [highlighter, setHighlighter] = useState(0)
   const [direction, setDirection] = useState(0)
+  const [prevPosition, setPrevPosition] = useState(0)
+  const [dragStart, setDragStart] = useState(false)
 
   const highlighterStyle = {
-    // visibility: highlighter ? "visible" : "hidden"
+    backgroundColor: "#81689D",
+    height: "4px",
+    border: "none"
   }
   function handleDragBoxMouseDown() {
     setIsDragging(true)
   }
   function handleDragStart(e, item, index) {
     setDraggingItem(item)
-    setHighlighter(index)
-    console.log(index, "dragstartindex")
+    setDragStart(true)
   }
-  function handleDragEnter(index) {
-  }
-  // function handleDragEnd() {
-  //   setDraggingItem(null)
-  //   setIsDragging(false)
-  //   setHighlighter(false)
+  // function handleDragEnter(index) {
   // }
+  function handleDragEnd() {
+    setDraggingItem(null)
+    setIsDragging(false)
+    setPrevPosition(0)
+    setDirection(0)
+    for(let i = 0; i <= dataComponents.length; i++) {
+      document.getElementById(i).style.setProperty("visibility", "hidden")
+    }
+  }
   function handleDragOver(e, item, index) {
     e.preventDefault()
-    if(index === highlighter)
+    if(index === dataComponents.indexOf(draggingItem) && dragStart) { 
       document.getElementById(index).style.setProperty("visibility", "hidden")
-    else document.getElementById(index+direction).style.setProperty("visibility", "visible")
+      document.getElementById(index+1).style.setProperty("visibility", "hidden")
+    }
+    else if(index < prevPosition) {
+      setDragStart(false)
+      document.getElementById(index).style.setProperty("visibility", "visible")
+      setDirection(0)
+    }
+    else if(index > prevPosition) {
+      setDragStart(false)
+      document.getElementById(index+1).style.setProperty("visibility", "visible")
+      setDirection(1)
+    }
   }
   function handleDragLeave(index) {
-    document.getElementById(index).style.setProperty("visibility", "hidden")
+    setPrevPosition(index)
+    document.getElementById(index+direction).style.setProperty("visibility", "hidden")
   }
   function handleDrop(e, targetItem, index) {
     if(!draggingItem) return
@@ -47,19 +65,12 @@ const MakeSortable = ({dataComponents, setDataComponents, setDraggingItem, dragg
     }
     setDraggingItem(null)
     setIsDragging(false)
-    setHighlighter(false)
-  }
-  function handleMouseMove(e) {
-    if(isDragging) {
-      console.log("triggered", e.movementX)
-      if(e.movementY > 0) 
-        setDirection(1)      //top to bottom is positive. need to add 1
-      else setDirection(0)
-    }
+    setPrevPosition(0)
+    setDirection(0)
   }
   
   return (
-    <div onMouseMove={(e) => handleMouseMove(e)}>
+    <div>
       {dataComponents.map((item,index) => {
           return (
             <div key={item.id} >
@@ -68,8 +79,8 @@ const MakeSortable = ({dataComponents, setDataComponents, setDraggingItem, dragg
                   style={{backgroundColor:item.color}}
                   draggable={isDragging ? 'true' : 'false'}
                   onDragStart={(e) => handleDragStart(e, item, index)}
-                  onDragEnter={() => handleDragEnter(index)}
-                  // onDragEnd={handleDragEnd}
+                  // onDragEnter={() => handleDragEnter(index)}
+                  onDragEnd={handleDragEnd}
                   onDragOver={(e) => handleDragOver(e, item, index)}
                   onDragLeave={() => handleDragLeave(index)}
                   onDrop={(e) => handleDrop(e, item, index)}>
@@ -82,7 +93,7 @@ const MakeSortable = ({dataComponents, setDataComponents, setDraggingItem, dragg
           )
         })
       }
-      <hr id={dataComponents.length}></hr>
+      <hr id={dataComponents.length} style={highlighterStyle}></hr>
     </div>
   )
 }

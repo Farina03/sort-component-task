@@ -14,10 +14,30 @@
     margin-top: 20px;
     cursor: grab;
 }
-
-hr {
+.indicator{
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 0;
+    background-color: gray;
+    border-radius: 5px;
+    margin: 0;
+    width: 300px;
+    height: 4px;
+    top: -15px;
     visibility: hidden;
+} 
+
+.indicator.upper{
+    
 }
+.indicator.lower{
+    bottom: -15px;
+}
+
+/* hr {
+    visibility: hidden;
+} */
 /* .highlight{
     visibility: visible;
 } */

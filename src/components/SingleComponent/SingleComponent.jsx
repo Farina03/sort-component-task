@@ -1,8 +1,9 @@
 import React from 'react'
+import '../MakeSortable/makesortable.css'
 
-const SingleComponent = () => {
+const SingleComponent = ({id, text, color}) => {
   return (
-    <div>SingleComponent</div>
+    <div style={{backgroundColor:color}} className='single-div-class'>{text}</div>
   )
 }
 

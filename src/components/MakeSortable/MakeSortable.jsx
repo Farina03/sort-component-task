@@ -18,6 +18,7 @@ const MakeSortable = ({dataComponents, setDataComponents, setDraggingItem, dragg
   function handleDragStart(e, item, index) {
     setDraggingItem(item)
     setDragStart(true)
+    console.log("triggering")
   }
   // function handleDragEnter(index) {
   // }
@@ -49,6 +50,7 @@ const MakeSortable = ({dataComponents, setDataComponents, setDraggingItem, dragg
   }
   function handleDragLeave(index) {
     setPrevPosition(index)
+    console.log(index, direction)
     document.getElementById(index+direction).style.setProperty("visibility", "hidden")
   }
   function handleDrop(e, targetItem, index) {
@@ -61,6 +63,7 @@ const MakeSortable = ({dataComponents, setDataComponents, setDraggingItem, dragg
       setDataComponents(dataComponents)
     }
     for(let i = 0; i <= dataComponents.length; i++) {
+      console.log(i)
       document.getElementById(i).style.setProperty("visibility", "hidden")
     }
     setDraggingItem(null)
@@ -71,9 +74,12 @@ const MakeSortable = ({dataComponents, setDataComponents, setDraggingItem, dragg
   
   return (
     <div>
+      {/* {dataComponents} */}
       {dataComponents.map((item,index) => {
-          return (
-            <div key={item.id} >
+          return ( 
+            <div>
+              {item}
+              <div key={item.id} >
               <hr id={index} style={highlighterStyle}></hr>
               <div key={item.id} className='single-div-class' 
                   style={{backgroundColor:item.color}}
@@ -88,6 +94,7 @@ const MakeSortable = ({dataComponents, setDataComponents, setDraggingItem, dragg
                   onMouseDown={handleDragBoxMouseDown}>
               </div>
               {item.text}
+            </div>
             </div>
             </div>
           )

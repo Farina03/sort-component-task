@@ -2,8 +2,9 @@
     height: 80px;
     width: 300px;
     border: .5px solid black;
-    margin: 20px;
+    margin: 40px;
     position: relative;
+    transition: all .2s ease;
 }
 .drag-div {
     position: absolute;
@@ -19,25 +20,16 @@
     left: 50%;
     transform: translateX(-50%);
     border: 0;
-    background-color: gray;
+    background-color: #81689D;
     border-radius: 5px;
     margin: 0;
-    width: 300px;
+    width: 105%;
     height: 4px;
-    top: -15px;
     visibility: hidden;
 } 
-
-.indicator.upper{
-    
+.upper{
+    top: -11px;
 }
-.indicator.lower{
-    bottom: -15px;
+.lower{
+    bottom: -11px;
 }
-
-/* hr {
-    visibility: hidden;
-} */
-/* .highlight{
-    visibility: visible;
-} */
